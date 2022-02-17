@@ -63,17 +63,12 @@ public final class MemoryUtil {
 			util = loadAccessor("org.lwjgl.MemoryUtilSun$AccessorUnsafe");
 		} catch (Exception e0) {
 			try {
-				// Depends on java.nio.Buffer#address and sun.reflect.FieldAccessor
-				util = loadAccessor("org.lwjgl.MemoryUtilSun$AccessorReflectFast");
-			} catch (Exception e1) {
-				try {
-					// Depends on java.nio.Buffer#address
-					util = new AccessorReflect();
-				} catch (Exception e2) {
-					LWJGLUtil.log("Unsupported JVM detected, this will likely result in low performance. Please inform LWJGL developers.");
-					util = new AccessorJNI();
-				}
-			}
+                // Depends on java.nio.Buffer#address
+                util = new AccessorReflect();
+            } catch (Exception e2) {
+                LWJGLUtil.log("Unsupported JVM detected, this will likely result in low performance. Please inform LWJGL developers.");
+                util = new AccessorJNI();
+            }
 		}
 
 		LWJGLUtil.log("MemoryUtil Accessor: " + util.getClass().getSimpleName());
