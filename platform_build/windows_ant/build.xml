@@ -11,6 +11,7 @@
 			<arg value="/I${sdkhome}\include"/>
 			<arg value="/I${java.home}\..\include"/>
 			<arg value="/I${java.home}\..\include\win32"/>
+			<arg value="/I${native}"/>
 			<arg value="/I${native}\common"/>
 			<arg value="/I${native}\common\opengl"/>
 			<arg value="/I${native}\windows"/>

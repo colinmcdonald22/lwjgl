@@ -34,6 +34,7 @@ package org.lwjgl;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
+import java.lang.annotation.Native;
 import java.lang.UnsatisfiedLinkError;
 
 /**
@@ -43,6 +44,7 @@ import java.lang.UnsatisfiedLinkError;
  * $Id$
  */
 final class LinuxSysImplementation extends J2SESysImplementation {
+	@Native
 	private static final int JNI_VERSION = 19;
 
 	static {
