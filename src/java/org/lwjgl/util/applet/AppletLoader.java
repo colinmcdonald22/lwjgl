@@ -85,7 +85,6 @@ import java.util.concurrent.Future;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.GZIPInputStream;
@@ -280,9 +279,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/** whether lzma is supported */
 	protected boolean 	lzmaSupported;
-
-	/** whether pack200 is supported */
-	protected boolean 	pack200Supported;
 	
 	/** whether to run in headless mode */
 	protected boolean 	headless = false;
@@ -375,13 +371,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			/* no lzma support */
 		}
 
-		// check pack200 support
-		try {
-			java.util.jar.Pack200.class.getSimpleName();
-			pack200Supported = true;
-		} catch (Throwable e) {
-			/* no pack200 support */
-		}
 	}
 
 	/**
@@ -708,9 +697,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @return trimmed string based on capabilities of client
 	 */
 	protected String trimExtensionByCapabilities(String file) {
-		if (!pack200Supported) {
-			file = file.replace(".pack", "");
-		}
+		file = file.replace(".pack", "");
 
 		if (!lzmaSupported && file.endsWith(".lzma")) {
 			file = file.replace(".lzma", "");
@@ -1672,29 +1659,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// delete GZip file, as it is no longer needed
 		f.delete();
 	}
-	
-	/**
-	 *  Extract Pack File
-	 *  @param in Input path to pack file
-	 *  @param out output path to resulting file
-	 *  @throws Exception if any errors occur
-	 */
-	protected void extractPack(String in, String out) throws Exception {
-		File f = new File(in);
-	    FileOutputStream fostream = new FileOutputStream(out);
-	    JarOutputStream jostream = new JarOutputStream(fostream);
-	    
-	    try {
-	    	Pack200.Unpacker unpacker = Pack200.newUnpacker();
-	    	unpacker.unpack(f, jostream);
-	    } finally {
-	    	jostream.close();
-	    	fostream.close();
-	    }
-
-	    // delete pack file as its no longer needed
-	    f.delete();
-	}
 
 	/**
 	 *  Extract all jars from any lzma/gz/pack files
@@ -1715,30 +1679,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			percentage = 55 + (int) (increment * (i+1));
 			String filename = getFileName(urlList[i]);
 			
-			if (filename.endsWith(".pack.lzma")) {
-				subtaskMessage = "Extracting: " + filename + " to " + replaceLast(filename, ".lzma", "");
-				debug_sleep(1000);
-				extractLZMA(path + filename, path + replaceLast(filename, ".lzma", ""));
-
-				subtaskMessage = "Extracting: " + replaceLast(filename, ".lzma", "") + " to " + replaceLast(filename, ".pack.lzma", "");
-				debug_sleep(1000);
-				extractPack(path + replaceLast(filename, ".lzma", ""), path + replaceLast(filename, ".pack.lzma", ""));
-			}
-			else if (filename.endsWith(".pack.gz")) {
-				subtaskMessage = "Extracting: " + filename + " to " + replaceLast(filename, ".gz", "");
-				debug_sleep(1000);
-				extractGZip(path + filename, path + replaceLast(filename, ".gz", ""));
-
-				subtaskMessage = "Extracting: " + replaceLast(filename, ".gz", "") + " to " + replaceLast(filename, ".pack.gz", "");
-				debug_sleep(1000);
-				extractPack(path + replaceLast(filename, ".gz", ""), path + replaceLast(filename, ".pack.gz", ""));
-			}
-			else if (filename.endsWith(".pack")) {
-				subtaskMessage = "Extracting: " + filename + " to " + replaceLast(filename, ".pack", "");
-				debug_sleep(1000);
-				extractPack(path + filename, path + replaceLast(filename, ".pack", ""));
-			}
-			else if (filename.endsWith(".lzma")) {
+			if (filename.endsWith(".lzma")) {
 				subtaskMessage = "Extracting: " + filename + " to " + replaceLast(filename, ".lzma", "");
 				debug_sleep(1000);
 				extractLZMA(path + filename, path + replaceLast(filename, ".lzma", ""));
@@ -2070,13 +2011,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	protected String getJarName(URL url) {
 		String fileName = url.getFile();
 
-		if (fileName.endsWith(".pack.lzma")) {
-			fileName = replaceLast(fileName, ".pack.lzma", "");
-		} else if (fileName.endsWith(".pack.gz")) {
-			fileName = replaceLast(fileName, ".pack.gz", "");
-		} else if (fileName.endsWith(".pack")) {
-			fileName = replaceLast(fileName, ".pack", "");
-		} else if (fileName.endsWith(".lzma")) {
+		if (fileName.endsWith(".lzma")) {
 			fileName = replaceLast(fileName, ".lzma", "");
 		} else if (fileName.endsWith(".gz")) {
 			fileName = replaceLast(fileName, ".gz", "");
