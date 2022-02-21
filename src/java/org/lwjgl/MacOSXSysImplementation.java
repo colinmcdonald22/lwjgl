@@ -31,9 +31,7 @@
  */
 package org.lwjgl;
 
-import java.awt.Desktop;
-import java.awt.Desktop.Action;
-import java.net.URI;
+import com.apple.eio.FileManager;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
@@ -60,15 +58,12 @@ final class MacOSXSysImplementation extends J2SESysImplementation {
 	}
 
 	public boolean openURL(String url) {
-	   if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Action.BROWSE)) {
-            try {
-                Desktop.getDesktop().browse(new URI(url)); 
-                return true;
-            } catch(Exception e) {
-                LWJGLUtil.log("Exception occurred while trying to invoke browser: " + e);
-            }
+		try {
+			FileManager.openURL(url);
+			return true;
+		} catch (Exception e) {
+			LWJGLUtil.log("Exception occurred while trying to invoke browser: " + e);
+			return false;
 		}
-			
-		return false;
 	}
 }

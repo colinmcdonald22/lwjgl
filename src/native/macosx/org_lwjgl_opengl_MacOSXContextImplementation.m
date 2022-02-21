@@ -132,9 +132,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nUpdate
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	dispatch_sync(dispatch_get_main_queue(), ^{
-		[context_info->context update];
-	});
+	[context_info->context update];
 	[pool release];
 }
 
@@ -165,9 +163,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
 			peer_info->glLayer->setViewport = YES;
 		}
 		
-		dispatch_sync(dispatch_get_main_queue(), ^{
-			[context_info->context setView: peer_info->window_info->view];
-		});
+		[context_info->context setView: peer_info->window_info->view];
 	}
 	else {
 		[context_info->context setPixelBuffer:peer_info->pbuffer cubeMapFace:0 mipMapLevel:0 currentVirtualScreen:0];
@@ -175,9 +171,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
 	
 	if (peer_info->isCALayer) {
 		// if using a CALayer, attach it to AWT Canvas and create a shared opengl context with current context
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[peer_info->glLayer attachLayer];
-		});
+		[peer_info->glLayer performSelectorOnMainThread:@selector(attachLayer) withObject:nil waitUntilDone:NO];
 	}
 	  
 	[pool release];
@@ -223,10 +217,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestro
 	
 	if (context_info->peer_info->isCALayer) {
 		context_info->peer_info->isCALayer = false;
-		dispatch_sync(dispatch_get_main_queue(), ^{
-			[context_info->peer_info->glLayer removeLayer];
-			[context_info->peer_info->glLayer release];
-		});
+		[context_info->peer_info->glLayer performSelectorOnMainThread:@selector(removeLayer) withObject:nil waitUntilDone:YES];
+		[context_info->peer_info->glLayer release];
 		context_info->peer_info->glLayer = nil;
         // don't release context due to nvidia driver bug when releasing shared contexts
         [context_info->context retain];

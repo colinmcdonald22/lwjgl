@@ -83,9 +83,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			/* we set bounds as requested w/ frame function */
                         peer_info->glLayer.frame = CGRectMake(x, y, surface->dsi->bounds.width, surface->dsi->bounds.height);
 			
-			dispatch_sync(dispatch_get_main_queue(), ^{
-				[peer_info->glLayer createWindow: peer_info->pixel_format];
-			});
+			[peer_info->glLayer performSelectorOnMainThread:@selector(createWindow:) withObject:peer_info->pixel_format waitUntilDone:YES];
 			
 			peer_info->isCALayer = true;
 			peer_info->isWindowed = true;
@@ -112,9 +110,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerPosit
 	if (peer_info->glLayer != nil) {
 		NSPoint point = NSMakePoint(x, y);
 		NSValue *value = [NSValue valueWithPoint:point];
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[peer_info->glLayer updatePosition: value];
-		});
+		[peer_info->glLayer performSelectorOnMainThread:@selector(updatePosition:) withObject:value waitUntilDone:NO];
 	}
 }
 
@@ -125,9 +121,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 	if (peer_info->glLayer != nil) {
 		NSRect rect = NSMakeRect(x, y, width, height);
 		NSValue *value = [NSValue valueWithRect:rect];
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[peer_info->glLayer updateBounds: value];
-		});
+		[peer_info->glLayer performSelectorOnMainThread:@selector(updateBounds:) withObject:value waitUntilDone:NO];
 	}
 }
 
