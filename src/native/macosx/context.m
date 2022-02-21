@@ -92,19 +92,17 @@ NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool g
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	if (use_display_bpp)
 	{
-		if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5) { // if OS X 10.6+ use newer api
-			CGDisplayModeRef mode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
-			CFStringRef pixEnc = CGDisplayModeCopyPixelEncoding(mode);
-			if (CFStringCompare(pixEnc, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-				bpp = 32;
-			else if(CFStringCompare(pixEnc, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-				bpp = 16;
-			else if(CFStringCompare(pixEnc, CFSTR(IO8BitIndexedPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-				bpp = 8;
-			else
-				bpp = CGDisplayBitsPerPixel(kCGDirectMainDisplay);
+		CGDisplayModeRef mode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
+		CFDictionaryRef dict = (CFDictionaryRef)*((int64_t *)mode + 2);
+		CFNumberRef num;
+		if (CFGetTypeID(dict) == CFDictionaryGetTypeID() && CFDictionaryGetValueIfPresent(dict, kCGDisplayBitsPerPixel, (const void**)&num))
+		{
+    		CFNumberGetValue(num, kCFNumberSInt32Type, (void*)&bpp);
+    		CFRelease(mode);
 		} else {
-			bpp = CGDisplayBitsPerPixel(kCGDirectMainDisplay);
+			CFRelease(mode);
+			throwException(env, "unknown pixel encoding");
+			return NULL;
 		}
 	}
 	else

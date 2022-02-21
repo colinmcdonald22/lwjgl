@@ -78,8 +78,9 @@ static NSUInteger lastModifierFlags = 0;
 	[window_info->view setParent:window_info];
 	
 	if (window_info->enableHighDPI) {
-		// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
-		[window_info->view performSelector:NSSelectorFromString(@"setWantsBestResolutionOpenGLSurface:") withObject:YES];
+		[window_info->view setWantsBestResolutionOpenGLSurface:YES];
+	} else {
+		[window_info->view setWantsBestResolutionOpenGLSurface:NO];
 	}
 	
 	// set nsapp delegate for catching app quit events
@@ -261,7 +262,9 @@ static NSUInteger lastModifierFlags = 0;
 	if (context == nil) return;
 	
 	if ([context view] != self) {
-		[context setView:self];
+		dispatch_sync(dispatch_get_main_queue(), ^{
+			[context setView:self];
+		});
 	}
 	
 	[context makeCurrentContext];
@@ -594,7 +597,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nResizeWindow(JNIEnv 
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	window_info->display_rect = NSMakeRect(x, y, width, height);
 	[window_info->window setFrame:window_info->display_rect display:false];
-	[window_info->view update];
+	dispatch_sync(dispatch_get_main_queue(), ^{
+		[window_info->view update];
+	});
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nWasResized(JNIEnv *env, jobject this, jobject window_handle) {
@@ -624,7 +629,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetResizable(JNIEnv 
 	} else {
 		style_mask &= ~NSResizableWindowMask;
 	}
-	[window_info->window setStyleMask:style_mask];
+	dispatch_sync(dispatch_get_main_queue(), ^{
+		[window_info->window setStyleMask:style_mask];
+	});
 
 	if (window_info->enableFullscreenModeAPI) {
 		if (resizable) {
@@ -666,7 +673,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetTitle(JNIEnv *env
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	const char *title_cstr = (const char *)(*env)->GetDirectBufferAddress(env, title_buffer);
 	NSString *title = [[NSString alloc] initWithUTF8String:title_cstr];
-	[window_info->window performSelectorOnMainThread:@selector(setTitle:) withObject:title waitUntilDone:NO];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[window_info->window setTitle: title];
+	});
 }
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jboolean resizable, jboolean parented, jboolean enableFullscreenModeAPI, jboolean enableHighDPI, jobject peer_info_handle, jobject window_handle) {
@@ -713,7 +722,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	}
 	
 	// create window on main thread
-	[MacOSXKeyableWindow performSelectorOnMainThread:@selector(createWindow) withObject:nil waitUntilDone:YES];
+	dispatch_sync(dispatch_get_main_queue(), ^{
+		[MacOSXKeyableWindow createWindow];
+	});
 	
 	return window_handle;
 }
@@ -721,7 +732,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv *env, jobject this, jobject window_handle) {
 	
 	// destroy window on main thread
-	[MacOSXKeyableWindow performSelectorOnMainThread:@selector(destroyWindow) withObject:nil waitUntilDone:YES];
+	dispatch_sync(dispatch_get_main_queue(), ^{
+		[MacOSXKeyableWindow destroyWindow];
+	});
 	
 	[pool drain];
 }
@@ -730,7 +743,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyCALayer(JNIEn
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	if (peer_info->isCALayer) {
 		peer_info->isCALayer = false;
-		[peer_info->glLayer performSelectorOnMainThread:@selector(removeLayer) withObject:nil waitUntilDone:YES];
+		dispatch_sync(dispatch_get_main_queue(), ^{
+			[peer_info->glLayer removeLayer];
+		});
 		[peer_info->glLayer release];
         peer_info->glLayer = nil;
 	}
