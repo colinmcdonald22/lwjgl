@@ -9,6 +9,8 @@
 		<apply dir="." failonerror="true" executable="cl" dest="." skipemptyfilesets="true" parallel="true">
 			<arg line="/c /W2 /EHsc /Ox /Gy /MT /MP /nologo"/>
 			<arg value="/I${sdkhome}\include"/>
+			<arg value="/I${java.home}\include"/>
+			<arg value="/I${java.home}\include\win32"/>
 			<arg value="/I${java.home}\..\include"/>
 			<arg value="/I${java.home}\..\include\win32"/>
 			<arg value="/I${native}"/>
@@ -33,6 +35,7 @@
 			<arg line="/LD /nologo"/>
 			<srcfile/>
 			<arg line="/Fe${dllname} /link"/>
+			<arg value="/LIBPATH:${java.home}\lib"/>
 			<arg value="/LIBPATH:${java.home}\..\lib"/>
 			<arg value="/LIBPATH:${sdkhomelib}"/>
 			<arg value="/OPT:REF"/>
