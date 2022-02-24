@@ -14,6 +14,7 @@
 /src/native/windows/Debug
 /src/native/windows/Release
 /temp
+/src/native/org_lwjgl_*.h
 /src/native/*/org_lwjgl_*.h
 /src/native/*/*/org_lwjgl_*.h
 /src/native/linux/org_lwjgl_opengl_Display.c
