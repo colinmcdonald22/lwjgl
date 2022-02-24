@@ -77,17 +77,38 @@ static LRESULT CALLBACK dummyWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
+
+
 bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat) {
 	PIXELFORMATDESCRIPTOR desc;
+	memset(&desc, 0, sizeof(PIXELFORMATDESCRIPTOR));
+	
 	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
 		throwFormattedException(env, "DescribePixelFormat failed (%d)", GetLastError());
 		return false;
 	}
 
-	// make that the pixel format of the device context
-	if (SetPixelFormat(hdc, iPixelFormat, &desc) == FALSE) {
-		throwFormattedException(env, "SetPixelFormat failed (%d)", GetLastError());
-		return false;
+	int oldPixelFormat = GetPixelFormat(hdc);
+	if(iPixelFormat != oldPixelFormat) {
+		// make that the pixel format of the device context
+		if (SetPixelFormat(hdc, iPixelFormat, &desc) == FALSE) {
+			printfDebugJava(env, "Unable to set requested pixel format (error=%d) : index=%d, type=%d, bits=%d, alpha=%d, depth=%d",
+				GetLastError(), iPixelFormat, desc.iPixelType, desc.cColorBits, desc.cAlphaBits, desc.cDepthBits);
+			
+			jboolean allowExistingFormat = getBooleanProperty(env, "org.lwjgl.opengl.Display.allowExistingPixelFormatFallback");
+			
+			if(allowExistingFormat && oldPixelFormat != 0) {
+				PIXELFORMATDESCRIPTOR oldDesc;
+				memset(&oldDesc, 0, sizeof(PIXELFORMATDESCRIPTOR));
+				
+				if(DescribePixelFormat(hdc, oldPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &oldDesc) != 0) {
+					printfDebugJava(env, "Falling back on existing pixel format: index=%d, type=%d, bits=%d, alpha=%d, depth=%d", oldPixelFormat, oldDesc.iPixelType, oldDesc.cColorBits, oldDesc.cAlphaBits, oldDesc.cDepthBits);
+				}
+			} else {
+				throwFormattedException(env, "Failed to set pixel format on device context");
+			}
+			return false;
+		}
 	}
 	return true;
 }
@@ -336,7 +357,7 @@ static int findPixelFormatFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, in
 		throwException(env, "Could not describe pixel format");
 		return -1;
 	}
-
+	
 	if (desc.cColorBits < bpp) {
 		throwException(env, "Insufficient color precision");
 		return -1;
