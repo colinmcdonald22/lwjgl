@@ -262,7 +262,7 @@ static NSUInteger lastModifierFlags = 0;
 	if (context == nil) return;
 	
 	if ([context view] != self) {
-		dispatch_sync(dispatch_get_main_queue(), ^{
+		dispatchSyncOnMainQueue(^{
 			[context setView:self];
 		});
 	}
@@ -597,7 +597,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nResizeWindow(JNIEnv 
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	window_info->display_rect = NSMakeRect(x, y, width, height);
 	[window_info->window setFrame:window_info->display_rect display:false];
-	dispatch_sync(dispatch_get_main_queue(), ^{
+	dispatchSyncOnMainQueue(^{
 		[window_info->view update];
 	});
 }
@@ -629,7 +629,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetResizable(JNIEnv 
 	} else {
 		style_mask &= ~NSResizableWindowMask;
 	}
-	dispatch_sync(dispatch_get_main_queue(), ^{
+	dispatchSyncOnMainQueue(^{
 		[window_info->window setStyleMask:style_mask];
 	});
 
@@ -722,7 +722,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	}
 	
 	// create window on main thread
-	dispatch_sync(dispatch_get_main_queue(), ^{
+	dispatchSyncOnMainQueue(^{
 		[MacOSXKeyableWindow createWindow];
 	});
 	
@@ -732,7 +732,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv *env, jobject this, jobject window_handle) {
 	
 	// destroy window on main thread
-	dispatch_sync(dispatch_get_main_queue(), ^{
+	dispatchSyncOnMainQueue(^{
 		[MacOSXKeyableWindow destroyWindow];
 	});
 	
@@ -743,7 +743,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyCALayer(JNIEn
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	if (peer_info->isCALayer) {
 		peer_info->isCALayer = false;
-		dispatch_sync(dispatch_get_main_queue(), ^{
+		dispatchSyncOnMainQueue(^{
 			[peer_info->glLayer removeLayer];
 		});
 		[peer_info->glLayer release];

@@ -132,7 +132,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nUpdate
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	dispatch_sync(dispatch_get_main_queue(), ^{
+	dispatchSyncOnMainQueue(^{
 		[context_info->context update];
 	});
 	[pool release];
@@ -165,7 +165,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
 			peer_info->glLayer->setViewport = YES;
 		}
 		
-		dispatch_sync(dispatch_get_main_queue(), ^{
+		dispatchSyncOnMainQueue(^{
 			[context_info->context setView: peer_info->window_info->view];
 		});
 	}
@@ -223,7 +223,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestro
 	
 	if (context_info->peer_info->isCALayer) {
 		context_info->peer_info->isCALayer = false;
-		dispatch_sync(dispatch_get_main_queue(), ^{
+		dispatchSyncOnMainQueue(^{
 			[context_info->peer_info->glLayer removeLayer];
 			[context_info->peer_info->glLayer release];
 		});

@@ -83,7 +83,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			/* we set bounds as requested w/ frame function */
                         peer_info->glLayer.frame = CGRectMake(x, y, surface->dsi->bounds.width, surface->dsi->bounds.height);
 			
-			dispatch_sync(dispatch_get_main_queue(), ^{
+			dispatchSyncOnMainQueue(^{
 				[peer_info->glLayer createWindow: peer_info->pixel_format];
 			});
 			
