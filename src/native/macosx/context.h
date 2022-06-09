@@ -163,13 +163,3 @@ typedef struct {
 
 NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool gl32, bool use_display_bpp, bool support_window, bool support_pbuffer, bool double_buffered);
 #endif
-
-// To avoid deadlock, check if the current thread is the main thread and
-// if that is the case execute the block directly.
-static void dispatchSyncOnMainQueue(void (^block)(void)) {
-    if ([NSThread isMainThread]) {
-        block();
-    } else {
-        dispatch_sync(dispatch_get_main_queue(), block);
-    }
-}
