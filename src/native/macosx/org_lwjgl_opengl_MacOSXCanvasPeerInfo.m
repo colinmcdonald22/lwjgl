@@ -69,21 +69,21 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 				return window_handle;
 			}
 			
-			if (peer_info->isCALayer) {
-				[peer_info->glLayer release];
-			}
-			
-			peer_info->glLayer = [GLLayer new];
-			
-			peer_info->glLayer->macosx_dsi = macosx_dsi;
-			peer_info->window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-			peer_info->glLayer->window_info = peer_info->window_info;
-			peer_info->glLayer->autoResizable = autoResizable;
-
-			/* we set bounds as requested w/ frame function */
-                        peer_info->glLayer.frame = CGRectMake(x, y, surface->dsi->bounds.width, surface->dsi->bounds.height);
-			
 			dispatchSyncOnMainQueue(^{
+				if (peer_info->isCALayer) {
+					[peer_info->glLayer release];
+				}
+				
+				peer_info->glLayer = [GLLayer new];
+				
+				peer_info->glLayer->macosx_dsi = macosx_dsi;
+				peer_info->window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
+				peer_info->glLayer->window_info = peer_info->window_info;
+				peer_info->glLayer->autoResizable = autoResizable;
+
+				/* we set bounds as requested w/ frame function */
+	            peer_info->glLayer.frame = CGRectMake(x, y, surface->dsi->bounds.width, surface->dsi->bounds.height);
+			
 				[peer_info->glLayer createWindow: peer_info->pixel_format];
 			});
 			
