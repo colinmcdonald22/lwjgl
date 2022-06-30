@@ -122,19 +122,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSwapBu
 	  
 	if (context_info->peer_info->isCALayer) {
 		// blit the contents of buffer to CALayer
-		dispatch_async(dispatch_get_main_queue(), ^{
-		  [context_info->peer_info->glLayer blitFrameBuffer];
-		});
+		[context_info->peer_info->glLayer blitFrameBuffer];
 	}
 	  
-  [pool release];
+    [pool release];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nUpdate
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	dispatch_async(dispatch_get_main_queue(), ^{
+	dispatchSyncOnMainQueue(^{
 		[context_info->context update];
 	});
 	[pool release];
@@ -151,7 +149,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_clearDr
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nReleaseCurrentContext
   (JNIEnv *env, jclass clazz) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-  [NSOpenGLContext clearCurrentContext];
+    [NSOpenGLContext clearCurrentContext];
 	[pool release];
 }
 
@@ -167,7 +165,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
 			peer_info->glLayer->setViewport = YES;
 		}
 		
-		dispatch_async(dispatch_get_main_queue(), ^{
+		dispatchSyncOnMainQueue(^{
 			[context_info->context setView: peer_info->window_info->view];
 		});
 	}
@@ -225,27 +223,28 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestro
 	
 	if (context_info->peer_info->isCALayer) {
 		context_info->peer_info->isCALayer = false;
-		dispatch_async(dispatch_get_main_queue(), ^{
+		dispatchSyncOnMainQueue(^{
 			[context_info->peer_info->glLayer removeLayer];
 			[context_info->peer_info->glLayer release];
-			context_info->peer_info->glLayer = nil;
 		});
-    // don't release context due to nvidia driver bug when releasing shared contexts
-    [context_info->context retain];
+		context_info->peer_info->glLayer = nil;
+        // don't release context due to nvidia driver bug when releasing shared contexts
+        [context_info->context retain];
 	}
 	
 	[context_info->context clearDrawable];
 	
 	if (context_info->peer_info->isWindowed) {
-    [context_info->peer_info->window_info->view setOpenGLContext:nil];
+        [context_info->peer_info->window_info->view setOpenGLContext:nil];
 		[context_info->context release];
 		context_info->context = nil;
 		context_info->peer_info->window_info->context = nil;
-	} else {
-    // don't release context due to nvidia driver bug when releasing shared contexts
-    //[context_info->context release];
+	}
+    else {
+        // don't release context due to nvidia driver bug when releasing shared contexts
+        //[context_info->context release];
 		//context_info->context = nil;
-  }
+    }
 	
 	[pool release];
 }
