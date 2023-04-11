@@ -46,30 +46,30 @@
 		</script>
 	</target>
 	
-	<target name="-checkjinputversion">
-			<script language="javascript" classpath="${lwjgl.lib}/jinput.jar">
-			<![CDATA[
-			var version =  net.java.games.input.Version.getVersion()
-			project.setNewProperty("jinputversion",version);
-			var declaredJinputVersion = project.getProperty("jinput.version");
-			java.lang.System.out.println("JINPUT Version: " + version + " - DeclaredVersion: " + declaredJinputVersion);
-				
-			if(declaredJinputVersion.equals(version)){
-				java.lang.System.out.println("JINPUT Version Matches");
-				project.setNewProperty("jinputversionmatches", true);
-			} else {
-				java.lang.System.out.println("JINPUT Version don't match");
-			}
-			]]>
-			</script>
-			<condition property="failjinputcheck">
-				<and>
-					<not><isset property="jinputversionmatches" /></not>
-					<not><isset property="overridejinput" /></not>
-				</and>
-			</condition>		
-			<fail  if="failjinputcheck" message="Jinput version in project (${jinputversion}) is different from the declared jinput version for maven (${jinput.version}) add -Doverridejinput=true as a command line option to avoid this check" />	
-	</target>
+<!--	<target name="-checkjinputversion">-->
+<!--			<script language="javascript" classpath="${lwjgl.lib}/jinput.jar">-->
+<!--			<![CDATA[-->
+<!--			var version =  net.java.games.input.Version.getVersion()-->
+<!--			project.setNewProperty("jinputversion",version);-->
+<!--			var declaredJinputVersion = project.getProperty("jinput.version");-->
+<!--			java.lang.System.out.println("JINPUT Version: " + version + " - DeclaredVersion: " + declaredJinputVersion);-->
+<!--				-->
+<!--			if(declaredJinputVersion.equals(version)){-->
+<!--				java.lang.System.out.println("JINPUT Version Matches");-->
+<!--				project.setNewProperty("jinputversionmatches", true);-->
+<!--			} else {-->
+<!--				java.lang.System.out.println("JINPUT Version don't match");-->
+<!--			}-->
+<!--			]]>-->
+<!--			</script>-->
+<!--			<condition property="failjinputcheck">-->
+<!--				<and>-->
+<!--					<not><isset property="jinputversionmatches" /></not>-->
+<!--					<not><isset property="overridejinput" /></not>-->
+<!--				</and>-->
+<!--			</condition>		-->
+<!--			<fail  if="failjinputcheck" message="Jinput version in project (${jinputversion}) is different from the declared jinput version for maven (${jinput.version}) add -Doverridejinput=true as a command line option to avoid this check" />	-->
+<!--	</target>-->
 
 	<target name="maven-full">
 		<antcall target="clean-java" />
@@ -81,7 +81,7 @@
         <antcall target="maven"/>
 	</target>
 	
-	<target name="maven" depends="-fixmavenversion, -checkjinputversion"> <!-- Added as dependency because using antcall creates a new project scope -->
+	<target name="maven" depends="-fixmavenversion"> <!-- Added as dependency because using antcall creates a new project scope -->
 		<delete dir="${lwjgl.dstMaven}" quiet="true" failonerror="false" taskname="cleaning maven dist" />
 		<mkdir dir="${lwjgl.dstMaven}"   taskname="initialiazing temp maven folder" />
 		<antcall target="-copylwjgljars" />
