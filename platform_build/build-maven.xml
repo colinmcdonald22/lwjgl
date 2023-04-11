@@ -25,24 +25,23 @@
 	 <target name="-fixmavenversion">
 		<script language="javascript">
 			<![CDATA[
-				importPackage(java.lang);
 				var originalVersion = project.getProperty("lwjgl.version");
-				System.out.println("LWJGL Version: " + originalVersion);
+				java.lang.System.out.println("LWJGL Version: " + originalVersion);
 				var mavenVersion = originalVersion;
 				if(originalVersion.match(/^[0-9]+\.[0-9]+$/)){
-					System.out.println("Fixing LWJGL Maven version (Maven version should be x.y.z)");
+					java.lang.System.out.println("Fixing LWJGL Maven version (Maven version should be x.y.z)");
 					mavenVersion = originalVersion + ".0";
 				}
 				if(!mavenVersion.match(/^.*-SNAPSHOT$/)){
 					var forceSnapshot = project.getProperty("snapshot")
 					if(forceSnapshot!=null && forceSnapshot!="false"){
-						System.out.println("Forcing Maven Version to Snapshot");
+						java.lang.System.out.println("Forcing Maven Version to Snapshot");
 						mavenVersion = mavenVersion + "-SNAPSHOT";
 					}
 			    }
 			
 				project.setNewProperty("lwjgl-maven-version",mavenVersion);
-				System.out.println("LWJGL Maven Version: " + project.getProperty("lwjgl-maven-version"));
+				java.lang.System.out.println("LWJGL Maven Version: " + project.getProperty("lwjgl-maven-version"));
 			]]>
 		</script>
 	</target>
@@ -50,17 +49,16 @@
 	<target name="-checkjinputversion">
 			<script language="javascript" classpath="${lwjgl.lib}/jinput.jar">
 			<![CDATA[
-			importPackage(java.lang);
 			var version =  net.java.games.input.Version.getVersion()
 			project.setNewProperty("jinputversion",version);
 			var declaredJinputVersion = project.getProperty("jinput.version");
-			System.out.println("JINPUT Version: " + version + " - DeclaredVersion: " + declaredJinputVersion);
+			java.lang.System.out.println("JINPUT Version: " + version + " - DeclaredVersion: " + declaredJinputVersion);
 				
 			if(declaredJinputVersion.equals(version)){
-				System.out.println("JINPUT Version Matches");
+				java.lang.System.out.println("JINPUT Version Matches");
 				project.setNewProperty("jinputversionmatches", true);
 			} else {
-				System.out.println("JINPUT Version don't match");
+				java.lang.System.out.println("JINPUT Version don't match");
 			}
 			]]>
 			</script>
