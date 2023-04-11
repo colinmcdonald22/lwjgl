@@ -62,7 +62,7 @@ jobs:
           name: natives
           path: bin/lwjgl
       - name: Build
-        run: ./gradlew generate-all maven-full
+        run: ./gradlew generate-all maven-full --info
       - uses: actions/upload-artifact@v3
         with:
           name: maven
