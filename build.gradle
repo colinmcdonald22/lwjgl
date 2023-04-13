@@ -82,3 +82,5 @@ tasks.register('clean-native') {
         }
     }
 }
+
+tasks.clean.dependsOn("clean-java", "clean-native")

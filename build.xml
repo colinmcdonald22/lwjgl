@@ -38,9 +38,6 @@
 		<mkdir dir="${lwjgl.temp}/native/solaris"   taskname="initialiazing temp/solaris folder" />
 	</target>
 
-	<!-- Cleans up any files created during the execution of this script -->
-	<target name="clean" description="Cleans all directories controlled by this ant script" depends="clean-java, clean-native"/>
-
 	<!-- Creates a distribution of LWJGL -->
 	<target name="release" description="Creates a distribution of LWJGL using supplied native binaries">
 		<!-- Warn user -->
