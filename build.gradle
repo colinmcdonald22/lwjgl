@@ -6,7 +6,8 @@ def ported = [
         "clean-generated",
         "clean-generated-native",
         "clean-java",
-        "clean-native"
+        "clean-native",
+        "clean"
 ]
 
 ant.importBuild('build.xml') { String oldTargetName ->
