@@ -50,7 +50,5 @@ tasks.register('clean-native', Delete) {
 tasks.clean.dependsOn("clean-java", "clean-native")
 
 "a-maven-full" {
-    doFirst {
-        dependsOn("clean-java")
-    }
+    dependsOn("clean-java")
 }
