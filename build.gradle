@@ -2,6 +2,18 @@ plugins {
     id 'java-library'
 }
 
+def ported = [
+        "clean-generated",
+        "clean-generated-native",
+        "clean-java",
+        "clean-native"
+]
+
+ant.importBuild('build.xml') { String oldTargetName ->
+    if (ported.contains(oldTargetName)) return oldTargetName
+    return "a-" + oldTargetName
+}
+
 // clean the generated files
 tasks.register('clean-generated') {
     description = "Deletes the generated java source"
@@ -69,16 +81,4 @@ tasks.register('clean-native') {
             fl.delete()
         }
     }
-}
-
-def ported = [
-        "clean-generated",
-        "clean-generated-native",
-        "clean-java",
-        "clean-native"
-]
-
-ant.importBuild('build.xml') { String oldTargetName ->
-    if (ported.contains(oldTargetName)) return oldTargetName
-    return "a-" + oldTargetName
 }
