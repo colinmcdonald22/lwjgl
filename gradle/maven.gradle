@@ -252,7 +252,7 @@ tasks.register("maven") {
 
     dependsOn "compile"
     dependsOn "-createjars"
-    dependsOn "maven_clean"
+//    dependsOn "maven_clean"
     dependsOn("copylwjgljars", "createmavensourcejars", "createmavenjavadocs",
             "createmavennativejars", "copymavenpoms", "copymaventdist")
 }
