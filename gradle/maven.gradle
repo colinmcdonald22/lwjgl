@@ -31,16 +31,17 @@ for (final def os in ["windows", "linux", "osx"]) {
 
         it.dependsOn "compile"
 
+        def praps = proparties["lwjgl-${os.replace("osx", "macosx")}-lwjgl.fileset"]
+
         it.from("${proparties['lwjgl.lib']}/${os}") {tr->
-            def praps = proparties["lwjgl-${os.replace("osx", "macosx")}-lwjgl.fileset"]
-            praps.includes.forEach {tr.include it}
-            praps.excludes.forEach {tr.exclude it}
+
+            praps.includes.forEach {aa -> tr.include aa}
+            praps.excludes.forEach {aa -> tr.exclude aa}
         }
 
         it.from("${proparties['lwjgl.bin'].toString()}/lwjgl") {tr->
-            def praps = proparties["lwjgl-${os.replace("osx", "macosx")}-lwjgl.fileset"]
-            praps.includes.forEach {tr.include it}
-            praps.excludes.forEach {tr.exclude it}
+            praps.includes.forEach {aa -> tr.include aa}
+            praps.excludes.forEach {aa -> tr.exclude aa}
         }
 
         it.destinationDirectory = proparties['lwjgl.dstMaven']
@@ -232,7 +233,7 @@ tasks.register("createmavenjavadocs") {
 }
 
 tasks.register("copymaventdist", Zip) {
-    dependsOn "copylwjgljars", "createmavensourcejars", "createmavenjavadocs", "copymavenpoms"
+    dependsOn "copylwjgljars", "createmavensourcejars", "createmavenjavadocs", "createmavennativejars", "copymavenpoms"
 
     from(proparties["lwjgl.temp"]) {
         include "maven/**"
