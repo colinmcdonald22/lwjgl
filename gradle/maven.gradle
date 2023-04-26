@@ -235,9 +235,10 @@ tasks.register("createmavenjavadocs") {
 tasks.register("copymaventdist", Zip) {
     dependsOn "copylwjgljars", "createmavensourcejars", "createmavenjavadocs", "createmavennativejars", "copymavenpoms"
 
-    from(proparties["lwjgl.temp"]) {
-        include "maven/**"
-    }
+//    from(proparties["lwjgl.temp"]) {
+//        include "maven/**"
+//    }
+    from proparties['lwjgl.dstMaven']
 
     destinationDirectory = file("./dist")
     archiveFileName = "lwjgl-maven-${proparties['lwjgl.version']}.zip"
