@@ -4,7 +4,7 @@ def Native = "../../lwjgl-platform/src"
 def Native_2 = "src/native"
 
 def getNativeFolder(String name, String fold) {
-    return "../../lwjgl-platform/src/" + name + "/c/" + fold
+    return file("lwjgl-platform/src/" + name + "/c/" + fold).toString()
 }
 
 def target_arch = ENV.ARCHITECTURE ? ENV.ARCHITECTURE : System.getProperty("os.arch")
