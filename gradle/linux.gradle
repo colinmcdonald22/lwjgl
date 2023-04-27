@@ -193,7 +193,7 @@ tasks.register("linux_natives_compile", Exec) {
             if (it.toString().contains("lwjgl-platform/src")) {
                 ["common", "common/opengl", "generated/openal",
                  "generated/opencl", "generated/opengl", "linux", "linux/opengl"].each {et ->
-                    fileTree(it + "/" + et) {
+                    fileTree(it.toString() + "/" + et) {
                         include "*.c"
                     }.files.each {args(it.toString())}
                 }
