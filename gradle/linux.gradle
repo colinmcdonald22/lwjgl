@@ -190,15 +190,19 @@ tasks.register("linux_natives_compile", Exec) {
 //                include "*.c"
 //            }.files.each {args(it.toString())}
 //        }
-        def folders = [] + project(":lwjgl-platform").sourceSets.common.resources.srcDirs +
+        def folders = project(":lwjgl-platform").sourceSets.common.resources.srcDirs +
                 project(":lwjgl-platform").sourceSets.linux.resources.srcDirs +
                 project(":lwjgl-platform").sourceSets.generated.resources.srcDirs
 
         folders.each {
-            println(it.toString())
-            fileTree(it) {
-                include "**.c"
-            }.files.each {args(it.toString())}
+            if (it.toString().contains("lwjgl-platform/src")) {
+                fileTree(it) {
+                    include "**.c"
+                }.files.each {
+                    println(it.toString())
+                    args(it.toString())
+                }
+            }
         }
     }
 }
