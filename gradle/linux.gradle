@@ -180,30 +180,22 @@ tasks.register("linux_natives_compile", Exec) {
      getNativeFolder("linux", "linux"),
      getNativeFolder("linux", "linux/opengl")
     ].each {
+        println(it)
         args("-I" + it)
     }
 
     doFirst {
-//        ["common", "common/opengl", "generated/openal",
-//         "generated/opencl", "generated/opengl", "linux", "linux/opengl"].each {
-//            fileTree(Native_2 + "/" + it) {
-//                include "*.c"
-//            }.files.each {args(it.toString())}
-//        }
         def folders = project(":lwjgl-platform").sourceSets.common.resources.srcDirs +
                 project(":lwjgl-platform").sourceSets.linux.resources.srcDirs +
                 project(":lwjgl-platform").sourceSets.generated.resources.srcDirs
 
         folders.each {
             if (it.toString().contains("lwjgl-platform/src")) {
-                fileTree(it) {
-                    include "*.c"
-                    include "**/*.c"
-                    include "**/**/*.c"
-                    exclude "**/opengles/**"
-                }.files.each {
-                    println(it.toString())
-                    args(it.toString())
+                ["common", "common/opengl", "generated/openal",
+                 "generated/opencl", "generated/opengl", "linux", "linux/opengl"].each {et ->
+                    fileTree(it + "/" + et) {
+                        include "*.c"
+                    }.files.each {args(it.toString())}
                 }
             }
         }
