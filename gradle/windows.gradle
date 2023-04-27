@@ -66,14 +66,16 @@ tasks.register("compile_win32", Exec) {
                 getNativeFolder("windows", "windows/opengl")
         ]
 
-        iss.each {args("/I" + it.replace("/", "\\"))}
+        iss.each {
+            args("/I" + it.replace("/", "\\"))
+        }
 
         def folders = project(":lwjgl-platform").sourceSets.common.resources.srcDirs +
                 project(":lwjgl-platform").sourceSets.windows.resources.srcDirs +
                 project(":lwjgl-platform").sourceSets.generated.resources.srcDirs
 
         folders.each {
-            if (it.toString().contains("lwjgl-platform/src")) {
+            if (it.toString().contains("lwjgl-platform\\src")) {
                 ["common", "common/opengl", "generated/openal",
                  "generated/opencl", "generated/opengl", "windows", "windows/opengl"].each {et ->
                     fileTree(it.toString() + "/" + et) {
