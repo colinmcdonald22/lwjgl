@@ -27,7 +27,7 @@ tasks.register("copymavenpoms", Copy) {
 
 tasks.register("createmavennativejars") {
     mustRunAfter "createmavenjavadocs"
-    dependsOn "compile", "linuxNativeJar", "macosxNativeJar", "windowsNativeJar"
+    dependsOn "compile", ":lwjgl-platform:linuxNativeJar", ":lwjgl-platform:macosxNativeJar", ":lwjgl-platform:windowsNativeJar"
 }
 
 tasks.register("createmavensourcejars_lwjgl", Jar) {
