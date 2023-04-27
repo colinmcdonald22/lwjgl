@@ -1,8 +1,5 @@
 def ENV = System.getenv()
 
-def Native = "../../lwjgl-platform/src"
-def Native_2 = "src/native"
-
 def getNativeFolder(String name, String fold) {
     return file("lwjgl-platform/src/" + name + "/c/" + fold).toString()
 }
@@ -180,7 +177,6 @@ tasks.register("linux_natives_compile", Exec) {
      getNativeFolder("linux", "linux"),
      getNativeFolder("linux", "linux/opengl")
     ].each {
-        println(it)
         args("-I" + it)
     }
 
