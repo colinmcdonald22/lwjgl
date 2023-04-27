@@ -197,7 +197,7 @@ tasks.register("linux_natives_compile", Exec) {
         folders.each {
             if (it.toString().contains("lwjgl-platform/src")) {
                 fileTree(it) {
-                    include "**.c"
+                    include "*.c"
                 }.files.each {
                     println(it.toString())
                     args(it.toString())
