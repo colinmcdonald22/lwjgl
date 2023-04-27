@@ -29,7 +29,7 @@ sourceSets {
 }
 
 tasks.register("linuxNativeJar", Jar) {
-    dependsOn "compile"
+    dependsOn ":compile"
     from fileTree("bin/lwjgl") {
         include "liblwjgl*.so"
     }
@@ -41,7 +41,7 @@ tasks.register("linuxNativeJar", Jar) {
 }
 
 tasks.register("macosxNativeJar", Jar) {
-    dependsOn "compile"
+    dependsOn ":compile"
     from fileTree("bin/lwjgl") {
         include "liblwjgl*.dylib"
     }
@@ -53,7 +53,7 @@ tasks.register("macosxNativeJar", Jar) {
 }
 
 tasks.register("windowsNativeJar", Jar) {
-    dependsOn "compile"
+    dependsOn ":compile"
     from fileTree("bin/lwjgl") {
         include "lwjgl*.dll"
     }
