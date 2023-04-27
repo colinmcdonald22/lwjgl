@@ -37,7 +37,7 @@ tasks.register("linuxNativeJar", Jar) {
         include "libopenal*.so"
     }
     archiveClassifier.set("natives-linux")
-    destinationDirectory.set(file("temp/maven"))
+    destinationDirectory.set(file("../temp/maven"))
 }
 
 tasks.register("macosxNativeJar", Jar) {
@@ -49,7 +49,7 @@ tasks.register("macosxNativeJar", Jar) {
         include "openal*.dylib"
     }
     archiveClassifier.set("natives-macosx")
-    destinationDirectory.set(file("temp/maven"))
+    destinationDirectory.set(file("../temp/maven"))
 }
 
 tasks.register("windowsNativeJar", Jar) {
@@ -61,5 +61,5 @@ tasks.register("windowsNativeJar", Jar) {
         include "OpenAL*.dll"
     }
     archiveClassifier.set("natives-windows")
-    destinationDirectory.set(file("temp/maven"))
+    destinationDirectory.set(file("../temp/maven"))
 }
