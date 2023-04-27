@@ -195,6 +195,7 @@ tasks.register("linux_natives_compile", Exec) {
                 project(":lwjgl-platform").sourceSets.generated.resources.srcDirs
 
         folders.each {
+            println(it.toString())
             fileTree(it) {
                 include "**.c"
             }.files.each {args(it.toString())}
