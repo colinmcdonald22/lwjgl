@@ -1,5 +1,6 @@
 plugins {
     id "c"
+    id 'maven-publish'
 }
 
 sourceSets {
@@ -67,4 +68,23 @@ tasks.register("windowsNativeJar", Jar) {
     archiveClassifier.set("natives-windows")
     destinationDirectory.set(file("../temp/maven"))
     archiveBaseName.set("lwjgl-platform")
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId "org.lwjgl.lwjgl"
+            artifactId "lwjgl-platform"
+
+            artifact(linuxNativeJar) {
+                builtBy linuxNativeJar
+            }
+            artifact(macosxNativeJar) {
+                builtBy macosxNativeJar
+            }
+            artifact(windowsNativeJar) {
+                builtBy windowsNativeJar
+            }
+        }
+    }
 }

@@ -1,5 +1,6 @@
 plugins {
     id "java"
+    id "maven-publish"
 }
 
 sourceSets {
@@ -59,3 +60,13 @@ tasks.register("jarUtils", Jar) {
 }
 
 assemble.dependsOn(":lwjgl:jarUtils")
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId "org.lwjgl.lwjgl"
+            artifactId "lwjgl"
+//            from components.java
+        }
+    }
+}
