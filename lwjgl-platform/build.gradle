@@ -85,6 +85,10 @@ publishing {
             artifact(windowsNativeJar) {
                 builtBy windowsNativeJar
             }
+
+            pom.withXml {
+//                asNode().append
+            }
         }
     }
 }

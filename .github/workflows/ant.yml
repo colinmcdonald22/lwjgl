@@ -168,8 +168,8 @@ jobs:
           name: natives
           path: bin/lwjgl
       - name: Build
-        run: ./gradlew maven-full --stacktrace
+        run: ./gradlew publishToMavenLocal --stacktrace
       - uses: actions/upload-artifact@v3
         with:
           name: maven
-          path: dist/lwjgl-maven-*.zip
+          path: ~/.m2/repository

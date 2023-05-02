@@ -32,41 +32,204 @@ compileJava {
 }
 
 jar {
-    include "org/**/*"
-    exclude(
-            "org/lwjgl/opengles/**",
-            "org/lwjgl/util/**"
-    )
-    include "org/lwjgl/opengles/ContextAttribs*.*"
-
     manifest {
         attributes(
                 "Sealed": true
         )
     }
+
+    doFirst {
+        from(project(":lwjgl-common").tasks.compileJava.outputs)
+
+        include "org/**/*"
+        exclude(
+                "org/lwjgl/opengles/**",
+                "org/lwjgl/util/**"
+        )
+        include "org/lwjgl/opengles/ContextAttribs*.*"
+    }
 }
 
-tasks.register("jarUtils", Jar) {
+tasks.register("sourceJar", Jar) {
+    dependsOn ":lwjgl-templates:generateAll"
+
+    doFirst {
+        from(compileJava.inputs.files)
+        from(project(":lwjgl-common").tasks.compileJava.inputs.files)
+
+        include "org/**/*"
+        include "org/lwjgl/opengles/ContextAttribs*.*"
+        exclude "org/lwjgl/opengles/**"
+        exclude "org/lwjgl/util/**"
+
+        include "**/*"
+
+        exclude "**.jar"
+    }
+
+    archiveBaseName.set("lwjgl")
+    archiveClassifier.set("sources")
+}
+
+tasks.register("utilJar", Jar) {
     dependsOn ":lwjgl:classes"
 
-    from(compileJava.outputs) {
+    doFirst {
+        from(compileJava.outputs)
+
         exclude "**.*"
         exclude "org/lwjgl/util/generator/**"
         exclude "org/lwjgl/util/applet/**"
         include "org/lwjgl/util/**"
     }
 
-    archiveBaseName = "lwjgl_util"
+    archiveBaseName.set("lwjgl_util")
 }
 
-assemble.dependsOn(":lwjgl:jarUtils")
+tasks.register("utilSourceJar", Jar) {
+    doFirst {
+        from(sourceSets.main.allJava.srcDirs)
+
+        exclude "**.*"
+        exclude "org/lwjgl/util/generator/**"
+        exclude "org/lwjgl/util/applet/**"
+        include "org/lwjgl/util/**"
+
+        exclude "**.jar"
+    }
+
+    archiveBaseName.set("lwjgl_util")
+    archiveClassifier.set("sources")
+}
+
+javadoc {
+    dependsOn ":lwjgl-templates:generateAll"
+
+    failOnError = false
+    maxMemory = '2G'
+
+    options {
+        source = 8
+        encoding = 'UTF-8'
+        charSet = 'UTF-8'
+        memberLevel = JavadocMemberLevel.PACKAGE
+        windowTitle("LWJGL API")
+        header("<h1>Lightweight Java Game Toolkit</h1>")
+    }
+
+    doFirst {
+        source(compileJava.inputs.files, project(":lwjgl-common").tasks.compileJava.inputs.files)
+
+        include "org/**/*"
+        include "org/lwjgl/opengles/ContextAttribs*.*"
+        exclude "org/lwjgl/opengles/**"
+        exclude "org/lwjgl/util/**"
+
+        include "**/*"
+
+        exclude "**.jar"
+
+        classpath = sourceSets.main.compileClasspath
+    }
+
+    // 		<javadoc destdir="${lwjgl.dstMaven}/lwjgl-javadoc" classpath="${lwjgl.lib}/jinput.jar" author="true" version="true" use="true" source="1.8" windowtitle="LWJGL API" useexternalfile="true">
+    //			<fileset refid="lwjgl-sources.manual.fileset"/>
+    //			<fileset refid="lwjgl-sources.generated.fileset"/>
+    //			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
+    //			<bottom><![CDATA[<i>Copyright &#169; 2002-2010 lwjgl.org. All Rights Reserved.</i>]]></bottom>
+    //		</javadoc>
+}
+
+tasks.register("javadocJar", Jar) {
+    dependsOn javadoc
+
+    doFirst {
+        from javadoc.destinationDir
+    }
+
+    archiveBaseName.set("lwjgl")
+    archiveClassifier.set("javadoc")
+}
+
+tasks.register("utilJavadoc", Javadoc) {
+    dependsOn jar
+
+    failOnError = false
+    maxMemory = '2G'
+
+    destinationDir = file("build/docs/javadoc_util")
+
+    options {
+        source = 8
+        encoding = 'UTF-8'
+        charSet = 'UTF-8'
+        memberLevel = JavadocMemberLevel.PACKAGE
+        windowTitle("LWJGL UTIL API")
+        header("<h1>Lightweight Java Game Toolkit</h1>")
+    }
+
+    source(compileJava.inputs.files)
+
+    exclude "**.*"
+    exclude "org/lwjgl/util/generator/**"
+    exclude "org/lwjgl/util/applet/**"
+    include "org/lwjgl/util/**"
+
+    classpath = sourceSets.main.compileClasspath + jar.outputs.files
+
+    // 		<javadoc destdir="${lwjgl.dstMaven}/lwjgl_util-javadoc" classpath="${lwjgl.lib}/jinput.jar:${lwjgl.lib}/lwjgl.jar" author="true" version="true" use="true" source="1.8" windowtitle="LWJGL UTIL API" useexternalfile="true">
+    //			<fileset refid="lwjgl_util-sources.fileset"/>
+    //			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
+    //			<bottom><![CDATA[<i>Copyright &#169; 2002-2010 lwjgl.org. All Rights Reserved.</i>]]></bottom>
+    //		</javadoc>
+}
+
+tasks.register("utilJavadocJar", Jar) {
+    dependsOn utilJavadoc
+
+    doFirst {
+        from utilJavadoc.destinationDir
+    }
+
+    archiveBaseName.set("lwjgl_util")
+    archiveClassifier.set("javadoc")
+}
+
+assemble.dependsOn(":lwjgl:sourceJar")
+assemble.dependsOn(":lwjgl:javadocJar")
+assemble.dependsOn(":lwjgl:utilJar")
+assemble.dependsOn(":lwjgl:utilSourceJar")
+assemble.dependsOn(":lwjgl:utilJavadocJar")
 
 publishing {
     publications {
-        maven(MavenPublication) {
+        lwjgl(MavenPublication) {
             groupId "org.lwjgl.lwjgl"
             artifactId "lwjgl"
-//            from components.java
+
+            artifact(jar) {
+                builtBy jar
+            }
+            artifact(sourceJar) {
+                builtBy sourceJar
+            }
+            artifact(javadocJar) {
+                builtBy javadocJar
+            }
+        }
+        lwjgl_util(MavenPublication) {
+            groupId "org.lwjgl.lwjgl"
+            artifactId "lwjgl_util"
+
+            artifact(utilJar) {
+                builtBy utilJar
+            }
+            artifact(utilSourceJar) {
+                builtBy utilSourceJar
+            }
+            artifact(utilJavadocJar) {
+                builtBy utilJavadocJar
+            }
         }
     }
 }
