@@ -41,12 +41,12 @@ jar {
     doFirst {
         from(project(":lwjgl-common").tasks.compileJava.outputs)
 
-        include "org/**/*"
-        exclude(
-                "org/lwjgl/opengles/**",
-                "org/lwjgl/util/**"
-        )
+        include "org/lwjgl/*"
         include "org/lwjgl/opengles/ContextAttribs*.*"
+        include "org/lwjgl/opencl/**"
+        include "org/lwjgl/opengl/**"
+        include "org/lwjgl/input/**"
+        include "org/lwjgl/openal/**"
     }
 }
 
@@ -61,12 +61,14 @@ sourcesJar {
     doFirst {
         from(project(":lwjgl-common").tasks.compileJava.inputs.files)
 
-        include "org/**/*"
+        include "org/lwjgl/*"
         include "org/lwjgl/opengles/ContextAttribs*.*"
-        exclude "org/lwjgl/opengles/**"
-        exclude "org/lwjgl/util/**"
+        include "org/lwjgl/opencl/**"
+        include "org/lwjgl/opengl/**"
+        include "org/lwjgl/input/**"
+        include "org/lwjgl/openal/**"
 
-        include "**/*"
+//        include "**/*"
 
         exclude "**.jar"
     }
@@ -121,12 +123,14 @@ javadoc {
     doFirst {
         source(compileJava.inputs.files, project(":lwjgl-common").tasks.compileJava.inputs.files)
 
-        include "org/**/*"
+        include "org/lwjgl/*"
         include "org/lwjgl/opengles/ContextAttribs*.*"
-        exclude "org/lwjgl/opengles/**"
-        exclude "org/lwjgl/util/**"
+        include "org/lwjgl/opencl/**"
+        include "org/lwjgl/opengl/**"
+        include "org/lwjgl/input/**"
+        include "org/lwjgl/openal/**"
 
-        include "**/*"
+//        include "**/*"
 
         exclude "**.jar"
 
