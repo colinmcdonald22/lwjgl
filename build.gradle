@@ -62,7 +62,7 @@ apply from:"gradle/props.gradle"
 
 def proparties = project.praps
 
-version = "2.9.4-babric.2"
+version = "2.9.4-legacyfabric.1"
 
 tasks.register("-initialize") {
     description = "Initialize build"
