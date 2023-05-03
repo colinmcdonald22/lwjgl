@@ -50,7 +50,12 @@ jar {
     }
 }
 
-tasks.register("sourceJar", Jar) {
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+sourcesJar {
     dependsOn ":lwjgl-templates:generateAll"
 
     doFirst {
@@ -66,9 +71,6 @@ tasks.register("sourceJar", Jar) {
 
         exclude "**.jar"
     }
-
-    archiveBaseName.set("lwjgl")
-    archiveClassifier.set("sources")
 }
 
 tasks.register("utilJar", Jar) {
@@ -140,17 +142,6 @@ javadoc {
     //		</javadoc>
 }
 
-tasks.register("javadocJar", Jar) {
-    dependsOn javadoc
-
-    doFirst {
-        from javadoc.destinationDir
-    }
-
-    archiveBaseName.set("lwjgl")
-    archiveClassifier.set("javadoc")
-}
-
 tasks.register("utilJavadoc", Javadoc) {
     dependsOn jar
 
@@ -195,8 +186,6 @@ tasks.register("utilJavadocJar", Jar) {
     archiveClassifier.set("javadoc")
 }
 
-assemble.dependsOn(":lwjgl:sourceJar")
-assemble.dependsOn(":lwjgl:javadocJar")
 assemble.dependsOn(":lwjgl:utilJar")
 assemble.dependsOn(":lwjgl:utilSourceJar")
 assemble.dependsOn(":lwjgl:utilJavadocJar")
@@ -210,8 +199,8 @@ publishing {
             artifact(jar) {
                 builtBy jar
             }
-            artifact(sourceJar) {
-                builtBy sourceJar
+            artifact(sourcesJar) {
+                builtBy sourcesJar
             }
             artifact(javadocJar) {
                 builtBy javadocJar

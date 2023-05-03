@@ -86,8 +86,15 @@ publishing {
                 builtBy windowsNativeJar
             }
 
-            pom.withXml {
-//                asNode().append
+            pom {
+                name = "Lighweight Java Game Library - Platform"
+                description = "Lighweight Java Game Library - Platform"
+                url = "http://lwjgl.org/"
+
+                scm {
+                    url = "http://java-game-lib.svn.sourceforge.net/viewvc/java-game-lib/trunk/"
+                    connection = "https://java-game-lib.svn.sourceforge.net/svnroot/java-game-lib"
+                }
             }
         }
     }
