@@ -21,7 +21,7 @@ dependencies {
     implementation(files("../libs/AppleJavaExtensions.jar"))
     implementation(files("../libs/asm-debug-all.jar"))
     implementation(project(":lwjgl-common"))
-    implementation("net.java.jinput:jinput:2.0.5")
+    implementation("net.java.jinput:jinput:$rootProject.jinput_version")
 }
 
 compileJava {
@@ -59,7 +59,6 @@ sourcesJar {
     dependsOn ":lwjgl-templates:generateAll"
 
     doFirst {
-        from(compileJava.inputs.files)
         from(project(":lwjgl-common").tasks.compileJava.inputs.files)
 
         include "org/**/*"
@@ -193,7 +192,6 @@ assemble.dependsOn(":lwjgl:utilJavadocJar")
 publishing {
     publications {
         lwjgl(MavenPublication) {
-            groupId "org.lwjgl.lwjgl"
             artifactId "lwjgl"
 
             artifact(jar) {
@@ -205,9 +203,42 @@ publishing {
             artifact(javadocJar) {
                 builtBy javadocJar
             }
+
+            pom {
+                name = "Lighweight Java Game Library"
+                packaging = "jar"
+                description = "Lighweight Java Game Library"
+                url = "http://lwjgl.org/"
+
+                scm {
+                    url = "http://java-game-lib.svn.sourceforge.net/viewvc/java-game-lib/trunk/"
+                    connection = "https://java-game-lib.svn.sourceforge.net/svnroot/java-game-lib"
+                }
+
+                withXml {
+                    def parenting = asNode().appendNode("parent")
+                    parenting.appendNode("groupId", project.group)
+                    parenting.appendNode("artifactId", "parent")
+                    parenting.appendNode("version", project.version)
+
+                    def deps = asNode().appendNode("dependencies")
+
+                    for (final def os in ["windows", "linux", "osx"]) {
+                        def dep = deps.appendNode("dependency")
+                        dep.appendNode("groupId", project.group)
+                        dep.appendNode("artifactId", "lwjgl-platform")
+                        dep.appendNode("version", project.version)
+                        dep.appendNode("classifier", "natives-$os")
+                    }
+
+                    def jinput = deps.appendNode("dependency")
+                    jinput.appendNode("groupId", "net.java.jinput")
+                    jinput.appendNode("artifactId", "jinput")
+                    jinput.appendNode("version", rootProject.jinput_version)
+                }
+            }
         }
         lwjgl_util(MavenPublication) {
-            groupId "org.lwjgl.lwjgl"
             artifactId "lwjgl_util"
 
             artifact(utilJar) {
@@ -218,6 +249,37 @@ publishing {
             }
             artifact(utilJavadocJar) {
                 builtBy utilJavadocJar
+            }
+
+            pom {
+                name = "Lighweight Java Game Library"
+                packaging = "jar"
+                description = "Lighweight Java Game Library"
+                url = "http://lwjgl.org/"
+
+                scm {
+                    url = "http://java-game-lib.svn.sourceforge.net/viewvc/java-game-lib/trunk/"
+                    connection = "https://java-game-lib.svn.sourceforge.net/svnroot/java-game-lib"
+                }
+
+                withXml {
+                    def parenting = asNode().appendNode("parent")
+                    parenting.appendNode("groupId", project.group)
+                    parenting.appendNode("artifactId", "parent")
+                    parenting.appendNode("version", project.version)
+
+                    def deps = asNode().appendNode("dependencies")
+
+                    def dep = deps.appendNode("dependency")
+                    dep.appendNode("groupId", project.group)
+                    dep.appendNode("artifactId", "lwjgl")
+                    dep.appendNode("version", project.version)
+
+                    def jinput = deps.appendNode("dependency")
+                    jinput.appendNode("groupId", "net.java.jinput")
+                    jinput.appendNode("artifactId", "jinput")
+                    jinput.appendNode("version", rootProject.jinput_version)
+                }
             }
         }
     }

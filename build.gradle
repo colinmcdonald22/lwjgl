@@ -62,8 +62,6 @@ apply from:"gradle/props.gradle"
 
 def proparties = project.praps
 
-version = "2.9.4-legacyfabric.1"
-
 tasks.register("-initialize") {
     description = "Initialize build"
 
@@ -220,13 +218,39 @@ allprojects {
 
 subprojects {
     version = rootProject.version
+    group = rootProject.group
 }
 
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId "org.lwjgl.lwjgl"
             artifactId "parent"
+
+            pom {
+                name = "Lighweight Java Game Library"
+                description = "Lighweight Java Game Library"
+                url = "http://lwjgl.org/"
+
+                licenses {
+                    license {
+                        name = "BSD"
+                        url = "http://lwjgl.org/license.php"
+                        distribution = "repo"
+                    }
+                }
+
+                scm {
+                    url = "http://java-game-lib.svn.sourceforge.net/viewvc/java-game-lib/trunk/"
+                    connection = "https://java-game-lib.svn.sourceforge.net/svnroot/java-game-lib"
+                }
+
+                developers {
+                    developer {
+                        id = "Developers"
+                        url = "http://lwjgl.org/credits.php"
+                    }
+                }
+            }
         }
     }
 }

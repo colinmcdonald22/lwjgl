@@ -73,7 +73,6 @@ tasks.register("windowsNativeJar", Jar) {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId "org.lwjgl.lwjgl"
             artifactId "lwjgl-platform"
 
             artifact(linuxNativeJar) {
@@ -94,6 +93,12 @@ publishing {
                 scm {
                     url = "http://java-game-lib.svn.sourceforge.net/viewvc/java-game-lib/trunk/"
                     connection = "https://java-game-lib.svn.sourceforge.net/svnroot/java-game-lib"
+                }
+                withXml {
+                    def parenting = asNode().appendNode("parent")
+                    parenting.appendNode("groupId", project.group)
+                    parenting.appendNode("artifactId", "parent")
+                    parenting.appendNode("version", project.version)
                 }
             }
         }
