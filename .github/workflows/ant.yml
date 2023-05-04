@@ -180,6 +180,6 @@ jobs:
           path: ~/.m2/repository
       - if: ${{ github.event_name == 'workflow_dispatch' }}
         name: Publish to Maven
-        run: ./gradlew publishToMaven --stacktrace
+        run: ./gradlew publish --stacktrace
         env:
           MAVEN_PUBLISH_CREDENTIALS: ${{ secrets.MAVEN_PUBLISH_CREDENTIALS }}
