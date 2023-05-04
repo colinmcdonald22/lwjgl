@@ -32,7 +32,7 @@ if (target_arch == "arm64" || target_arch == "aarch64") {
 def developer_path;
 
 try {
-    def developer_path_pros = Os.isName("mac os x") ? "xcode-select -print-path".execute() : null
+    def developer_path_pros = Os.isFamily("mac") ? "xcode-select -print-path".execute() : null
 
     if (developer_path_pros == null || developer_path_pros.exitValue() != 0) {
         developer_path = "/Developer"
@@ -41,6 +41,14 @@ try {
     }
 } catch (ignored) {
     developer_path = "/Developer"
+}
+
+if (developer_path == "/Developer") {
+    developer_path = (ENV.XCODE_13_DEVELOPER_DIR ? ENV.XCODE_13_DEVELOPER_DIR : (
+            ENV.XCODE_14_DEVELOPER_DIR ? ENV.XCODE_14_DEVELOPER_DIR : (
+                    ENV.XCODE_15_DEVELOPER_DIR ? ENV.XCODE_15_DEVELOPER_DIR : "/Developer"
+            )
+    ))
 }
 
 

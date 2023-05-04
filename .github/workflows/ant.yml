@@ -96,8 +96,6 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
           arch: ${{ matrix.msvc_arch }}
-    - if: matrix.os == 'macos-latest'
-      run: printenv
     - name: Build natives
       run: ./gradlew compile_native --stacktrace
       env:
