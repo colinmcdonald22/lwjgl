@@ -52,9 +52,6 @@
 #include "extgl.h"
 #include "extgl_glx.h"
 #include "context.h"
-#if defined(__PPC64__) || defined(__ppc64__) || defined(_ARCH_PPC64)
-#include <stdbool.h>
-#endif
 #include "org_lwjgl_opengl_LinuxDisplay.h"
 #include "org_lwjgl_opengl_LinuxDisplayPeerInfo.h"
 #include "org_lwjgl_LinuxSysImplementation.h"

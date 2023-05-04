@@ -31,9 +31,6 @@
  */
 #include <dlfcn.h>
 #include "extgl_glx.h"
-#if defined(__PPC64__) || defined(__ppc64__) || defined(_ARCH_PPC64)
-#include <stdbool.h>
-#endif
 
 glXGetFBConfigsPROC lwjgl_glXGetFBConfigs = NULL;
 glXChooseFBConfigPROC lwjgl_glXChooseFBConfig = NULL;

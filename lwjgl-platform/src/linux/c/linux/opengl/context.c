@@ -45,9 +45,6 @@
 #include <X11/Xutil.h>
 #include "extgl_glx.h"
 #include "context.h"
-#if defined(__PPC64__) || defined(__ppc64__) || defined(_ARCH_PPC64)
-#include <stdbool.h>
-#endif
 
 XVisualInfo *getVisualInfoFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info) {
 	XVisualInfo *vis_info;

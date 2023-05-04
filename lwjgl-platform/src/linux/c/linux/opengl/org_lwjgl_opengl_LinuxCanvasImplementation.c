@@ -44,9 +44,6 @@
 #include "org_lwjgl_opengl_LinuxCanvasImplementation.h"
 #include "extgl_glx.h"
 #include "context.h"
-#if defined(__PPC64__) || defined(__ppc64__) || defined(_ARCH_PPC64)
-#include <stdbool.h>
-#endif
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxCanvasImplementation_nFindVisualIDFromFormat
 	(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject pixel_format) {
