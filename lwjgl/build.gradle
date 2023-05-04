@@ -313,11 +313,11 @@ publishing {
 
                     def deps = asNode().appendNode("dependencies")
 
-                    for (final def os in ["windows", "linux"]) {
+                    for (final def os in ["windows", "linux", "osx"]) {
                         def dep = deps.appendNode("dependency")
-                        dep.appendNode("groupId", project.group)
+                        dep.appendNode("groupId", '${project.groupId}')
                         dep.appendNode("artifactId", "lwjgl-platform")
-                        dep.appendNode("version", project.version)
+                        dep.appendNode("version", '${project.version}')
                         dep.appendNode("classifier", "natives-$os")
                     }
 

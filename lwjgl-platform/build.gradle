@@ -78,11 +78,11 @@ publishing {
             artifact(linuxNativeJar) {
                 builtBy linuxNativeJar
             }
-            artifact(macosxNativeJar) {
-                builtBy macosxNativeJar
-            }
             artifact(windowsNativeJar) {
                 builtBy windowsNativeJar
+            }
+            artifact(macosxNativeJar) {
+                builtBy macosxNativeJar
             }
 
             pom {
