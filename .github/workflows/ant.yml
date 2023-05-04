@@ -178,7 +178,7 @@ jobs:
         with:
           name: maven
           path: ~/.m2/repository
-      - if: env.GITHUB_EVENT_NAME == 'workflow_dispatch'
+      - if: ${{ github.event_name == 'workflow_dispatch' }}
         name: Publish to Maven
         run: ./gradlew publishToMaven --stacktrace
         env:
