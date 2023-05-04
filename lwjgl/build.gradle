@@ -404,4 +404,5 @@ publishing {
             }
         }
     }
+    setupRepositories(repositories)
 }
