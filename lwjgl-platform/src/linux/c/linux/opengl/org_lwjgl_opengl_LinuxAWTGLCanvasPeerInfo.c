@@ -45,6 +45,9 @@
 #include "awt_tools.h"
 #include "org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo.h"
 #include "context.h"
+#if defined(__PPC64__) || defined(__ppc64__) || defined(_ARCH_PPC64)
+#include <stdbool.h>
+#endif
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo_getScreenFromSurfaceInfo
   (JNIEnv *env, jclass clazz, jobject lock_buffer_handle) {

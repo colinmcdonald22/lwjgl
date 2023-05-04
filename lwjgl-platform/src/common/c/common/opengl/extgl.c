@@ -36,6 +36,9 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <string.h>
 #include "extgl.h"
+#if defined(__PPC64__) || defined(__ppc64__) || defined(_ARCH_PPC64)
+#include <stdbool.h>
+#endif
 #include "common_tools.h"
 
 void extgl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions) {
