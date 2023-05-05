@@ -5,6 +5,7 @@ on: [ push, workflow_dispatch ]
 jobs:
   natives:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: windows-latest
