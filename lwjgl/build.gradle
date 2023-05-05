@@ -279,22 +279,11 @@ tasks.register("utilAppletJavadocJar", Jar) {
     archiveClassifier.set("javadoc")
 }
 
-def ENV = System.getenv()
-def os_arch = getArch(System.getProperty("os.arch"))
-def target_arch = ENV.ARCHITECTURE ? getArch(ENV.ARCHITECTURE) : os_arch
-
-println("Os arch: $os_arch")
-println("Target arch: $target_arch")
-
 tasks.register("nativeTest", JavaExec) {
     dependsOn "testClasses"
     systemProperty("java.library.path", file("../lwjgl-platform/build/natives").toString())
     classpath = sourceSets.test.runtimeClasspath
     mainClass = "org.lwjgl.test.NativeTest"
-
-    if (os_arch == target_arch) {
-        mustRunAfter ":compile_native"
-    }
 }
 
 assemble.dependsOn(":lwjgl:utilJar")
