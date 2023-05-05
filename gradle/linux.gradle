@@ -25,13 +25,7 @@ if (target_arch == "x86" || target_arch == "i386") {
     linux_arch = "ppc64"
 }
 
-def libname = "liblwjgl64.so"
-
-if (linux_arch == "i386") {
-    libname = "liblwjgl.so"
-} else if (linux_arch != "amd64") {
-    libname = "liblwjgl-${linux_arch}.so"
-}
+def libname = "liblwjgl-linux-${linux_arch}.so"
 
 def java_home = ENV.JAVA_HOME + "/jre"
 if (ENV.ARCHITECTURE && linux_arch != "amd64") {
@@ -170,7 +164,7 @@ tasks.register("linux_natives_compile", Exec) {
     cflags_pthread.each {args(it)}
 
     ["${java_home}/include", "${java_home}/include/linux", "${java_home}/../include",
-     "${java_home}/../include/linux", "${java_home}/../include/solaris",
+     "${java_home}/../include/linux",
      getNativeFolder("generated", "."),
      getNativeFolder("common", "common"),
      getNativeFolder("common", "common/opengl"),

@@ -20,13 +20,14 @@ def target_arch = ENV.ARCHITECTURE ? ENV.ARCHITECTURE : System.getProperty("os.a
 
 def macos_arch = "x86_64"
 
+def macos_target = "10.9"
+
 if (target_arch == "arm64" || target_arch == "aarch64") {
     macos_arch = "arm64"
-}
-
-def macos_target = "10.9"
-if (target_arch == "arm64" || target_arch == "aarch64") {
     macos_target = "11.0"
+    target_arch = "aarch64"
+} else {
+    target_arch = "amd64"
 }
 
 def developer_path = "/Developer";
@@ -60,15 +61,9 @@ def compiler = "clang"
 def workdir = "bin/lwjgl"
 def workdirX = "${workdir}/${macos_arch}"
 
-def final_name = "liblwjgl.dylib"
-if (target_arch == "arm64" || target_arch == "aarch64") {
-    final_name = "liblwjgl-arm64.dylib"
-}
+def final_name = "liblwjgl-macos-${target_arch}.dylib"
 
-def temp_name = "liblwjgl-x86_64.dylib"
-if (target_arch == "arm64" || target_arch == "aarch64") {
-    temp_name = "liblwjgl-arm64.dylib"
-}
+def temp_name = "liblwjgl-${target_arch}.dylib"
 
 tasks.register("macosx_natives_echo") {
     dependsOn "a-version-mismatch"
