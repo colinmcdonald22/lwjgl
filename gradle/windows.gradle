@@ -5,7 +5,7 @@ def getNativeFolder(String name, String fold) {
 }
 
 def os_arch = getArch(System.getProperty("os.arch"))
-def target_arch = getArch(ENV.ARCHITECTURE ? ENV.ARCHITECTURE : System.getProperty("os.arch"))
+def target_arch = ENV.ARCHITECTURE ? getArch(ENV.ARCHITECTURE) : os_arch
 
 def java_home = System.getProperty("java.home")
 
