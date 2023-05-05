@@ -62,7 +62,7 @@ def cflags = [
 ]
 
 def version_script_flags = [
-        "-Wl,--version-script='${file("src/linux/c/linux/lwjgl.map")}'"
+        "-Wl,--version-script='${file("src/linux/c/linux/lwjgl.map").toString()}'"
 ]
 
 def linker_flags = version_script_flags + [

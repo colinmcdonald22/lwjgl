@@ -86,7 +86,8 @@ static String getArch(String arch) {
     return "unknown"
 }
 
-static def getNativeFolder(String name, String fold) {
+static String getNativeFolder(String name, String fold) {
+    file("lwjgl-platform/src/" + name + "/c/" + fold).mkdirs()
     return file("lwjgl-platform/src/" + name + "/c/" + fold).toString()
 }
 
