@@ -87,10 +87,10 @@ tasks.register("macosx_natives_compile", Exec) {
                 "-arch",
                 macos_arch,
                 "-mmacosx-version-min=${macos_target}",
-                "-no_weak_imports",
                 "-ObjC",
                 "-O2",
                 "-Wall",
+                "-Werror=partial-availability",
                 "-Wunused",
                 "-c",
                 "-fPIC"
