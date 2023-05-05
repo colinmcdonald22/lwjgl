@@ -25,6 +25,8 @@ jobs:
           - os: macos-latest
             arch: x64
             java_arch: x64
+            extra_java: 8
+            vendor: zulu
           - os: macos-latest
             arch: arm64
             java_arch: x64
