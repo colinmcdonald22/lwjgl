@@ -74,7 +74,7 @@ tasks.register("compile_win32", Exec) {
         )
     }
 
-    workingDir(workdir)
+    workingDir(workdirX)
 }
 
 tasks.register("link_win32", Exec) {
@@ -86,7 +86,7 @@ tasks.register("link_win32", Exec) {
                 "/LD", "/nologo"
         )
 
-        fileTree("bin/lwjgl") {
+        fileTree(workdirX) {
             include "*.obj"
         }.files.each {args(it.toString())}
 
