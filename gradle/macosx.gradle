@@ -10,6 +10,8 @@ def java_home = System.getProperty("java.home")
 if (ENV.ARCHITECTURE) {
     if (ENV.ARCHITECTURE == "arm64") {
         java_home = ENV.JAVA_HOME_8_ARM64 + "/jre"
+    } else {
+        java_home = java_home + "/jre"
     }
 }
 
