@@ -213,12 +213,10 @@ allprojects {
 
     tasks.all {
         if (it instanceof JavaCompile) {
-            targetCompatibility = JavaVersion.VERSION_1_8
-            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_11
+            sourceCompatibility = JavaVersion.VERSION_11
             it.options.encoding = "UTF-8"
-            if (JavaVersion.current().isJava9Compatible()) {
-                it.options.release = 8
-            }
+            it.options.release = 11
         }
     }
 }
