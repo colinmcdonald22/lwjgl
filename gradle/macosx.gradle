@@ -6,7 +6,7 @@ def getNativeFolder(String name, String fold) {
     return file("lwjgl-platform/src/" + name + "/c/" + fold).toString()
 }
 
-def java_home = ENV.JAVA_HOME + "/jre"
+def java_home = System.getProperty("java.home")
 
 if (ENV.ARCHITECTURE) {
     if (ENV.ARCHITECTURE == "arm64") {

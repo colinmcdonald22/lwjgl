@@ -14,7 +14,7 @@ if (target_arch == "x86" || target_arch == "i386") {
     target_arch = "amd64"
 }
 
-def java_home = ENV.JAVA_HOME + "/jre"
+def java_home = System.getProperty("java.home")
 
 if (ENV.ARCHITECTURE && target_arch == "aarch64") {
     java_home = ENV.JAVA_HOME_17_ARM64 + "/jre"

@@ -27,7 +27,7 @@ if (target_arch == "x86" || target_arch == "i386") {
 
 def libname = "liblwjgl-linux-${linux_arch}.so"
 
-def java_home = ENV.JAVA_HOME + "/jre"
+def java_home = System.getProperty("java.home")
 if (ENV.ARCHITECTURE && linux_arch != "amd64") {
     if (linux_arch == "armhf" || linux_arch == "riscv64"
             || linux_arch == "armel" || linux_arch == "riscv64"
