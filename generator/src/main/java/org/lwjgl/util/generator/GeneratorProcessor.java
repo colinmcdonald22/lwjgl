@@ -52,7 +52,7 @@ import javax.tools.Diagnostic;
  */
 @SupportedAnnotationTypes({ "*" })
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-@SupportedOptions({ "binpath", "typemap", "generatechecks", "contextspecific" })
+@SupportedOptions({ "binpath", "typemap", "generatechecks", "contextspecific", "outputDir" })
 public class GeneratorProcessor extends AbstractProcessor {
 
 	private static boolean first_round = true;
