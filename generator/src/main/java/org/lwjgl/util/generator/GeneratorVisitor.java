@@ -287,8 +287,10 @@ public class GeneratorVisitor extends ElementKindVisitor8<Void, Void> {
 
 		PrintWriter java_writer = null;
 		try {
+//			final StandardLocation sourceOutput = StandardLocation.locationFor("");
+//			env.getOptions()
 			final JavaFileObject outputJava = env.getFiler().createSourceFile(
-					env.getElementUtils().getPackageOf(e).getQualifiedName().toString() + "." + Utils.getSimpleClassName(e));
+					(env.getElementUtils().getPackageOf(e).getQualifiedName().toString() + "." + Utils.getSimpleClassName(e)).replace("\\.", "/"));
 			final File outputJavaFile = new File(outputJava.toUri());
 
 			final Collection<? extends ExecutableElement> methods = Utils.getMethods(e);

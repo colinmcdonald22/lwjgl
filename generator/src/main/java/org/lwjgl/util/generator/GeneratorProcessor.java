@@ -87,10 +87,11 @@ public class GeneratorProcessor extends AbstractProcessor {
 			first_round = false;
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			if ( lastFile == null ) {
 				throw new RuntimeException(e);
 			} else {
-				throw new RuntimeException("\n-- Failed to process template: " + lastFile.asType().toString() + " --", e);
+				throw new RuntimeException("\n-- Failed to process template: " + lastFile.asType().toString() + " --");
 			}
 		}
 	}
