@@ -87,7 +87,6 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: 11
-        distribution: zulu
         architecture: ${{ matrix.java_arch }}
     - if: (matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04') && matrix.arch == 'amd64'
       run: sudo apt install libx11-dev libxrandr-dev libxext-dev libxcursor-dev libxxf86vm-dev
