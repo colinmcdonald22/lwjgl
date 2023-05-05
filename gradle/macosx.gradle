@@ -16,18 +16,16 @@ if (ENV.ARCHITECTURE) {
 
 def javavmroot = java_home + "/.."
 
-def target_arch = ENV.ARCHITECTURE ? ENV.ARCHITECTURE : System.getProperty("os.arch")
+def os_arch = getArch(System.getProperty("os.arch"))
+def target_arch = getArch(ENV.ARCHITECTURE ? ENV.ARCHITECTURE : System.getProperty("os.arch"))
 
 def macos_arch = "x86_64"
 
 def macos_target = "10.9"
 
-if (target_arch == "arm64" || target_arch == "aarch64") {
+if (target_arch == "aarch64") {
     macos_arch = "arm64"
     macos_target = "11.0"
-    target_arch = "aarch64"
-} else {
-    target_arch = "amd64"
 }
 
 def developer_path = "/Developer";
@@ -72,7 +70,7 @@ tasks.register("macosx_natives_echo") {
                 "\nMac OS SDK: ${sdkroot}" +
                 "\nMacOS Version Target: ${macos_target}" +
                 "\nJava Home/JavaVM.framework: ${javavmroot}" +
-                "\nOS arch: ${System.getProperty("os.arch")}" +
+                "\nOS arch: ${os_arch}" +
                 "\nTarget arch ${target_arch}"
         )
         mkdir(workdirX)

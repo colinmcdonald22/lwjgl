@@ -4,26 +4,8 @@ def getNativeFolder(String name, String fold) {
     return file("lwjgl-platform/src/" + name + "/c/" + fold).toString()
 }
 
-def target_arch = ENV.ARCHITECTURE ? ENV.ARCHITECTURE : System.getProperty("os.arch")
-
-def linux_arch = "amd64"
-if (target_arch == "x86" || target_arch == "i386") {
-    linux_arch = "i386"
-} else if (target_arch == "arm32hf" || target_arch == "armhf" || target_arch == "aarch32hf") {
-    linux_arch = "armhf"
-} else if (target_arch == "arm64" || target_arch == "aarch64") {
-    linux_arch = "aarch64"
-} else if (target_arch == "ppc64el" || target_arch == "powerpc64le" || target_arch == "ppc64le" || target_arch == "powerpc64el") {
-    linux_arch = "ppc64el"
-} else if (target_arch == "riscv64") {
-    linux_arch = "riscv64"
-} else if (target_arch == "armel" || target_arch == "arm" || target_arch == "arm32" || target_arch == "aarch32") {
-    linux_arch = "armel"
-} else if (target_arch == "powerpc" || target_arch == "ppc") {
-    linux_arch = "powerpc"
-} else if (target_arch == "ppc64" || target_arch == "powerpc64") {
-    linux_arch = "ppc64"
-}
+def os_arch = getArch(System.getProperty("os.arch"))
+def linux_arch = getArch(ENV.ARCHITECTURE ? ENV.ARCHITECTURE : System.getProperty("os.arch"))
 
 def libname = "liblwjgl-linux-${linux_arch}.so"
 
@@ -144,7 +126,7 @@ tasks.register("linux_natives_init") {
         println(
                 "Compiler: ${compiler}" +
                 "\nJava Home: ${java_home}" +
-                "\nOS arch: ${System.getProperty("os.arch")}" +
+                "\nOS arch: ${os_arch}" +
                 "\nTarget arch ${linux_arch}"
         )
         mkdir(workdirX)

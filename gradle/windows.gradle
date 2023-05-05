@@ -4,15 +4,8 @@ def getNativeFolder(String name, String fold) {
     return file("lwjgl-platform/src/" + name + "/c/" + fold).toString()
 }
 
-def target_arch = ENV.ARCHITECTURE ? ENV.ARCHITECTURE : System.getProperty("os.arch")
-
-if (target_arch == "x86" || target_arch == "i386") {
-    target_arch = "i386"
-} else if (target_arch == "arm64" || target_arch == "aarch64") {
-    target_arch = "aarch64"
-} else {
-    target_arch = "amd64"
-}
+def os_arch = getArch(System.getProperty("os.arch"))
+def target_arch = getArch(ENV.ARCHITECTURE ? ENV.ARCHITECTURE : System.getProperty("os.arch"))
 
 def java_home = System.getProperty("java.home")
 
@@ -76,7 +69,7 @@ tasks.register("compile_win32", Exec) {
         println("SDK: ${sdkhomelib}" +
                 "\nDLLName: ${dllname}" +
                 "\nJava Home: ${java_home}" +
-                "\nOS arch: ${System.getProperty("os.arch")}" +
+                "\nOS arch: ${os_arch}" +
                 "\nTarget arch ${target_arch}"
         )
     }
